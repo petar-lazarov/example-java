@@ -1,5 +1,13 @@
 language: java
 sudo: false # faster builds
 
+before_install:
+  - mkdir -p $HOME/bin
+  - curl -fsSL https://testspace-client.s3.amazonaws.com/testspace-linux-dev.tgz | tar -zxvf- -C $HOME/bin
+  - testspace config url open.stridespace.com
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+after_script:
+  - testspace */target/surefire-reports/TEST-*.xml{.} --link=codecov
